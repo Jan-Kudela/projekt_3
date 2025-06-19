@@ -21,18 +21,27 @@ parsovane_html = BeautifulSoup(odpoved.text, features="html.parser")
 hledany_odkaz = parsovane_html.find_all("table", {"class": "table"})
 
 number_list = []
+#obsahuje čísla obcí, které jsou v odkazu
 for a in hledany_odkaz:
-    hledany_a = a.find_all("a")
-    for b in hledany_a:
+     hledany_a = a.find_all("a")
+     for b in hledany_a:
         number = (b.get_text())
         if number.isdigit():
             number_list.append(number)
 
-#hledane_cislo = hledany_odkaz.get_text()
+#print(number_list)
 
 
-#print(hledany_a[0].get_text())
+url_2 = url[:37] + "311"+ url[39:59] +"xobec=" + number_list[0] + "&xvyber=" + url[-4:]
+#url pro vybranou obec
 
+odpoved_2 = requests.get(url_2)
+if odpoved_2.status_code != 200:
+    print("Chyba při načítání stránky:", odpoved_2.status_code)
+    sys.exit(1)
 
+parsovane_html_2 = BeautifulSoup(odpoved_2.text, features="html.parser")
+nazev_obce = parsovane_html_2.find_all("h3")[2].get_text()
+#print(nazev_obce)
 
-print(number_list)
+volici_v_seznamu = parsovane_html_2.find_all("tbody")
