@@ -9,6 +9,7 @@ import sys
 import requests
 from requests import get
 from bs4 import BeautifulSoup
+import csv
 
 
 def parsovani_html(url):
@@ -38,8 +39,8 @@ def parsovani_cisel_obci(parsovane_html):
     return (cisla_obci)
 
 
-def ziskani_url2(url, cisla_vsech_obci):
-    url_2 = url[:37] + "311"+ url[39:59] +"xobec=" + cisla_vsech_obci[0] + "&xvyber=" + url[-4:]
+def ziskani_url2(url, cisla_vsech_obci, index):
+    url_2 = url[:37] + "311"+ url[39:59] +"xobec=" + cisla_vsech_obci[index] + "&xvyber=" + url[-4:]
     return url_2
 #url pro vybranou obec
 
@@ -58,9 +59,14 @@ def parsovani_html2(url_2):
         return parsovane_html_2
     
 
-def nazev_obce(html):
-    obec = html.find_all("h3")[2].get_text()
-    return f"{obec[6:]}"
+def nazvy_obci(html):
+    obce = html.find_all("td", {"class": "overflow_name"})
+    obce_soupis = []
+    for a in obce:
+        text = a.get_text(strip=True)
+        obce_soupis.append(text)
+
+    return obce_soupis
 
 
 def volici(html):
@@ -104,26 +110,52 @@ def hlasy_stran(html):
     return hlasy_soupis 
 
 
+def zapis_hlavicky_csv(nazev_csv, strany_soupis):
+    with open(nazev_csv, mode="w", encoding="UTF-8") as csv_soubor:
+        zapisovac = csv.writer(csv_soubor)
+        zapisovac.writerow("Číslo obce", "Obec", "Voliči", "Vydané obálky", "Platné hlasy", strany_soupis)
+        
+
+def zapis_dat_csv(nazev_csv, cislo_obce, obec, volici, obalky, hlasy, hlasy_stran):
+    with open(nazev_csv, mode="w", encoding="UTF-8") as csv_soubor:
+        zapisovac = csv.writer(csv_soubor)
+        zapisovac.writerow(cislo_obce, obec, volici, obalky, hlasy, hlasy_stran)
+
+
 def main():
     url = "https://www.volby.cz/pls/ps2017nss/ps32?xjazyk=CZ&xkraj=12&xnumnuts=7103"
+
+    finalni_csv = "vysledky.csv"
     parsovane_html = parsovani_html(url)
 
     cisla_vsech_obci = parsovani_cisel_obci(parsovane_html)
 
-    url2 = ziskani_url2(url, cisla_vsech_obci)
+    url2 = ziskani_url2(url, cisla_vsech_obci,0)
 
     parsovane_html2 = parsovani_html2(url2)
 
-    obec = nazev_obce(parsovane_html2)
+    obce = nazvy_obci(parsovane_html)
 
-    volici(parsovane_html2)
+    pocet_volicu = volici(parsovane_html2)
 
-    obalky(parsovane_html2)
+    pocet_obalek = obalky(parsovane_html2)
 
-    platne_hlasy(parsovane_html2)
+    platne_hl = platne_hlasy(parsovane_html2)
 
-    hlasy_stran(parsovane_html2)
-    
+    hl_stran = hlasy_stran(parsovane_html2)
+
+    strany_soupis = strany(parsovane_html2)
+
+
+
+    #print(cisla_vsech_obci[0])
+    print(obce)
+    #print(pocet_volicu)
+    #print(pocet_obalek)
+    #print(platne_hl)
+    #print(strany_soupis)
+    #print(hl_stran)
+
 
 if __name__ == "__main__":
     main()
