@@ -10,63 +10,120 @@ import requests
 from requests import get
 from bs4 import BeautifulSoup
 
-url = "https://www.volby.cz/pls/ps2017nss/ps32?xjazyk=CZ&xkraj=12&xnumnuts=7103"
-odpoved = requests.get(url)
-if odpoved.status_code != 200:
-    print("Chyba při načítání stránky:", odpoved.status_code)
-    sys.exit(1)
+
+def parsovani_html(url):
     
-parsovane_html = BeautifulSoup(odpoved.text, features="html.parser")
+    odpoved = requests.get(url)
+    if odpoved.status_code != 200:
+        print("Chyba při načítání stránky:", odpoved.status_code)
+        sys.exit(1)
+    else:   
+        parsovane_html = BeautifulSoup(odpoved.text, features="html.parser")
 
-hledany_odkaz = parsovane_html.find_all("table", {"class": "table"})
-
-number_list = []
-#obsahuje čísla obcí, které jsou v odkazu
-for a in hledany_odkaz:
-     hledany_a = a.find_all("a")
-     for b in hledany_a:
-        number = (b.get_text())
-        if number.isdigit():
-            number_list.append(number)
-
-#print(number_list)
+        return parsovane_html
 
 
-url_2 = url[:37] + "311"+ url[39:59] +"xobec=" + number_list[0] + "&xvyber=" + url[-4:]
+def parsovani_cisel_obci(parsovane_html):
+    hledany_odkaz = parsovane_html.find_all("table", {"class": "table"})
+
+    cisla_obci = []
+    #obsahuje čísla obcí, které jsou v odkazu
+    for a in hledany_odkaz:
+        hledany_a = a.find_all("a")
+        for b in hledany_a:
+            number = (b.get_text())
+            if number.isdigit():
+                cisla_obci.append(number)
+
+    return (cisla_obci)
+
+
+def ziskani_url2(url, cisla_vsech_obci):
+    url_2 = url[:37] + "311"+ url[39:59] +"xobec=" + cisla_vsech_obci[0] + "&xvyber=" + url[-4:]
+    return url_2
 #url pro vybranou obec
 
-odpoved_2 = requests.get(url_2)
-if odpoved_2.status_code != 200:
-    print("Chyba při načítání stránky:", odpoved_2.status_code)
-    sys.exit(1)
 
-parsovane_html_2 = BeautifulSoup(odpoved_2.text, features="html.parser")
-nazev_obce = parsovane_html_2.find_all("h3")[2].get_text()
+def parsovani_html2(url_2):
+    odpoved_2 = requests.get(url_2)
+    if odpoved_2.status_code != 200:
+        print("Chyba při načítání stránky:", odpoved_2.status_code)
+        sys.exit(1)
 
-print(nazev_obce[6:])
+    else:
+        parsovane_html_2 = BeautifulSoup(
+            odpoved_2.text, features="html.parser"
+            )
 
-volici_v_seznamu = parsovane_html_2.find_all("td")[3].get_text()
-print(volici_v_seznamu)
+        return parsovane_html_2
+    
 
-vydane_obalky = parsovane_html_2.find_all("td")[4].get_text()
-print(vydane_obalky)
+def nazev_obce(html):
+    obec = html.find_all("h3")[2].get_text()
+    return f"{obec[6:]}"
 
-platne_hlasy = parsovane_html_2.find_all("td")[7].get_text()
-print(platne_hlasy)
 
-strana = parsovane_html_2.find_all("td", {"class": "overflow_name"})
-#print(strana)
+def volici(html):
+    volici_v_seznamu = html.find_all("td")[3].get_text()
+    return volici_v_seznamu
 
-strana_soupis = []
-for a in strana:
-    text = a.get_text(strip=True)
-    strana_soupis.append(text)
 
-print(strana_soupis)
+def obalky(html):
+    vydane_obalky = html.find_all("td")[4].get_text()
+    return vydane_obalky
 
-strana_hlasy = parsovane_html_2.find_all("td", {"class": "cislo", "headers": "t1sa2 t1sb3"})
-hlasy_soupis = []
-for a in strana_hlasy:
-    cislo = a.get_text(strip=True)
-    hlasy_soupis.append(cislo)
-print(hlasy_soupis) 
+
+def platne_hlasy(html):
+    platne_hl = html.find_all("td")[7].get_text()
+    return platne_hl
+
+
+def strany(html):
+    strana = html.find_all("td", {"class": "overflow_name"})
+
+    strana_soupis = []
+    for a in strana:
+        text = a.get_text(strip=True)
+        strana_soupis.append(text)
+
+    return strana_soupis
+
+
+def hlasy_stran(html):
+    strana_hlasy_t1 = html.find_all(
+        "td", {"class": "cislo", "headers": "t1sa2 t1sb3"})
+    strana_hlasy_t2 = html.find_all(
+        "td", {"class": "cislo", "headers": "t2sa2 t2sb3"})
+    strana_hlasy_celkem = strana_hlasy_t1 + strana_hlasy_t2
+    hlasy_soupis = []
+    
+    for a in strana_hlasy_celkem:
+        cislo = a.get_text(strip=True)
+        hlasy_soupis.append(cislo)
+    
+    return hlasy_soupis 
+
+
+def main():
+    url = "https://www.volby.cz/pls/ps2017nss/ps32?xjazyk=CZ&xkraj=12&xnumnuts=7103"
+    parsovane_html = parsovani_html(url)
+
+    cisla_vsech_obci = parsovani_cisel_obci(parsovane_html)
+
+    url2 = ziskani_url2(url, cisla_vsech_obci)
+
+    parsovane_html2 = parsovani_html2(url2)
+
+    obec = nazev_obce(parsovane_html2)
+
+    volici(parsovane_html2)
+
+    obalky(parsovane_html2)
+
+    platne_hlasy(parsovane_html2)
+
+    hlasy_stran(parsovane_html2)
+    
+
+if __name__ == "__main__":
+    main()
