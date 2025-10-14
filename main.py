@@ -129,30 +129,40 @@ def main():
     parsovane_html = parsovani_html(url)
 
     cisla_vsech_obci = parsovani_cisel_obci(parsovane_html)
-
-    url2 = ziskani_url2(url, cisla_vsech_obci,0)
-
-    parsovane_html2 = parsovani_html2(url2)
-
+    
     obce = nazvy_obci(parsovane_html)
 
-    pocet_volicu = volici(parsovane_html2)
+    print("Stahuji data ze zadané URL.")
+    x = 0
+    while x < len(cisla_vsech_obci):
 
-    pocet_obalek = obalky(parsovane_html2)
+        url_dane_obce = ziskani_url2(url, cisla_vsech_obci,x)
+    
+        parsovane_html2 = parsovani_html2(url_dane_obce)
 
-    platne_hl = platne_hlasy(parsovane_html2)
+        pocet_volicu = volici(parsovane_html2)
 
-    hl_stran = hlasy_stran(parsovane_html2)
+        pocet_obalek = obalky(parsovane_html2)
 
-    strany_soupis = strany(parsovane_html2)
+        platne_hl = platne_hlasy(parsovane_html2)
 
-    zapis_hlavicky_csv(finalni_csv, strany_soupis)
-    zapis_dat_csv(finalni_csv, cisla_vsech_obci[0], obce[0], pocet_volicu, pocet_obalek, platne_hl, hl_stran)
+        hl_stran = hlasy_stran(parsovane_html2)
 
+        strany_soupis = strany(parsovane_html2)
 
+        if x == 0:
+            zapis_hlavicky_csv(finalni_csv, strany_soupis)
+            print(f"Ukládám data do souboru {finalni_csv}.")
+
+        zapis_dat_csv(
+            finalni_csv, cisla_vsech_obci[x], obce[x], pocet_volicu, pocet_obalek, platne_hl, hl_stran)
+
+        x += 1
+
+    else: print("Hotovo, ukončuji program.")
 
     #print(cisla_vsech_obci[0])
-    print(obce)
+    #print(obce)
     #print(pocet_volicu)
     #print(pocet_obalek)
     #print(platne_hl)
