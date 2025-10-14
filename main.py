@@ -111,15 +111,15 @@ def hlasy_stran(html):
 
 
 def zapis_hlavicky_csv(nazev_csv, strany_soupis):
-    with open(nazev_csv, mode="w", encoding="UTF-8") as csv_soubor:
-        zapisovac = csv.writer(csv_soubor)
-        zapisovac.writerow("Číslo obce", "Obec", "Voliči", "Vydané obálky", "Platné hlasy", strany_soupis)
+    with open(nazev_csv, mode="w", encoding="utf-8") as csv_soubor:
+        zapisovac = csv.writer(csv_soubor, dialect="excel-tab")
+        zapisovac.writerow(("Číslo obce", "Obec", "Voliči", "Vydané obálky", "Platné hlasy", strany_soupis))
         
 
 def zapis_dat_csv(nazev_csv, cislo_obce, obec, volici, obalky, hlasy, hlasy_stran):
-    with open(nazev_csv, mode="w", encoding="UTF-8") as csv_soubor:
-        zapisovac = csv.writer(csv_soubor)
-        zapisovac.writerow(cislo_obce, obec, volici, obalky, hlasy, hlasy_stran)
+    with open(nazev_csv, mode="a", encoding="utf-8") as csv_soubor:
+        zapisovac = csv.writer(csv_soubor, dialect="excel-tab")
+        zapisovac.writerow((cislo_obce, obec, volici, obalky, hlasy, hlasy_stran))
 
 
 def main():
@@ -145,6 +145,9 @@ def main():
     hl_stran = hlasy_stran(parsovane_html2)
 
     strany_soupis = strany(parsovane_html2)
+
+    zapis_hlavicky_csv(finalni_csv, strany_soupis)
+    zapis_dat_csv(finalni_csv, cisla_vsech_obci[0], obce[0], pocet_volicu, pocet_obalek, platne_hl, hl_stran)
 
 
 
