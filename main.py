@@ -123,51 +123,62 @@ def zapis_dat_csv(nazev_csv, cislo_obce, obec, volici, obalky, hlasy, hlasy_stra
 
 
 def main():
-    url = "https://www.volby.cz/pls/ps2017nss/ps32?xjazyk=CZ&xkraj=12&xnumnuts=7103"
-
-    finalni_csv = "vysledky.csv"
-    parsovane_html = parsovani_html(url)
-
-    cisla_vsech_obci = parsovani_cisel_obci(parsovane_html)
+    url = sys.argv[1]
+    # spustíme python main.py "url adresa" "nazev souboru.csv"
+    #"https://www.volby.cz/pls/ps2017nss/ps32?xjazyk=CZ&xkraj=12&xnumnuts=7103"
+    if len(sys.argv) != 3:
+        print("Pro spuštění chybí argument url nebo název souboru.")
+        quit
+    elif "https://www.volby.cz/pls" not in sys.argv[1]:
+        print("Zadali jste špatný odkaz.")
+        quit
+    elif ".csv" in sys.argv[1]:
+        print("Zadali jste špatné pořadí argumentů.")
+    else:
     
-    obce = nazvy_obci(parsovane_html)
+        finalni_csv = sys.argv[2]
+        parsovane_html = parsovani_html(url)
 
-    print("Stahuji data ze zadané URL.")
-    x = 0
-    while x < len(cisla_vsech_obci):
+        cisla_vsech_obci = parsovani_cisel_obci(parsovane_html)
+        
+        obce = nazvy_obci(parsovane_html)
 
-        url_dane_obce = ziskani_url2(url, cisla_vsech_obci,x)
-    
-        parsovane_html2 = parsovani_html2(url_dane_obce)
+        print("Stahuji data ze zadané URL.")
+        x = 0
+        while x < len(cisla_vsech_obci):
 
-        pocet_volicu = volici(parsovane_html2)
+            url_dane_obce = ziskani_url2(url, cisla_vsech_obci,x)
+        
+            parsovane_html2 = parsovani_html2(url_dane_obce)
 
-        pocet_obalek = obalky(parsovane_html2)
+            pocet_volicu = volici(parsovane_html2)
 
-        platne_hl = platne_hlasy(parsovane_html2)
+            pocet_obalek = obalky(parsovane_html2)
 
-        hl_stran = hlasy_stran(parsovane_html2)
+            platne_hl = platne_hlasy(parsovane_html2)
 
-        strany_soupis = strany(parsovane_html2)
+            hl_stran = hlasy_stran(parsovane_html2)
 
-        if x == 0:
-            zapis_hlavicky_csv(finalni_csv, strany_soupis)
-            print(f"Ukládám data do souboru {finalni_csv}.")
+            strany_soupis = strany(parsovane_html2)
 
-        zapis_dat_csv(
-            finalni_csv, cisla_vsech_obci[x], obce[x], pocet_volicu, pocet_obalek, platne_hl, hl_stran)
+            if x == 0:
+                zapis_hlavicky_csv(finalni_csv, strany_soupis)
+                print(f"Ukládám data do souboru {finalni_csv}.")
 
-        x += 1
+            zapis_dat_csv(
+                finalni_csv, cisla_vsech_obci[x], obce[x], pocet_volicu, pocet_obalek, platne_hl, hl_stran)
 
-    else: print("Hotovo, ukončuji program.")
+            x += 1
 
-    #print(cisla_vsech_obci[0])
-    #print(obce)
-    #print(pocet_volicu)
-    #print(pocet_obalek)
-    #print(platne_hl)
-    #print(strany_soupis)
-    #print(hl_stran)
+        else: print("Hotovo, ukončuji program.")
+
+        #print(cisla_vsech_obci[0])
+        #print(obce)
+        #print(pocet_volicu)
+        #print(pocet_obalek)
+        #print(platne_hl)
+        #print(strany_soupis)
+        #print(hl_stran)
 
 
 if __name__ == "__main__":
