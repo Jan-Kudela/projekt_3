@@ -10,7 +10,7 @@ import requests
 from requests import get
 from bs4 import BeautifulSoup
 import csv
-
+import subprocess
 
 def parsovani_html(url):
     
@@ -92,7 +92,7 @@ def strany(html):
         text = a.get_text(strip=True)
         strana_soupis.append(text)
 
-    return strana_soupis
+    return(", ".join(strana_soupis))
 
 
 def hlasy_stran(html):
@@ -107,7 +107,7 @@ def hlasy_stran(html):
         cislo = a.get_text(strip=True)
         hlasy_soupis.append(cislo)
     
-    return hlasy_soupis 
+    return (", ".join(hlasy_soupis)) 
 
 
 def zapis_hlavicky_csv(nazev_csv, strany_soupis):
@@ -122,20 +122,31 @@ def zapis_dat_csv(nazev_csv, cislo_obce, obec, volici, obalky, hlasy, hlasy_stra
         zapisovac.writerow((cislo_obce, obec, volici, obalky, hlasy, hlasy_stran))
 
 
+def vypis_knihoven():
+    with open("requirements.txt", "w", encoding = "utf-8") as r:
+        subprocess.run(["pip", "freeze"], stdout =r, text=True )
+
+
 def main():
+
     url = sys.argv[1]
     # spustíme python main.py "url adresa" "nazev souboru.csv"
     #"https://www.volby.cz/pls/ps2017nss/ps32?xjazyk=CZ&xkraj=12&xnumnuts=7103"
     if len(sys.argv) != 3:
         print("Pro spuštění chybí argument url nebo název souboru.")
-        quit
+        sys.exit()
     elif "https://www.volby.cz/pls" not in sys.argv[1]:
-        print("Zadali jste špatný odkaz.")
-        quit
-    elif ".csv" in sys.argv[1]:
-        print("Zadali jste špatné pořadí argumentů.")
+        if ".csv" in sys.argv[1]:
+            print("Zadali jste špatné pořadí argumentů.")
+            sys.exit()
+        else:
+            print("Zadali jste špatný odkaz.")
+            sys.exit()
+    elif ".csv" not in sys.argv[2]:
+            print("Název musí končit příponou .csv.")
     else:
-    
+        vypis_knihoven()
+
         finalni_csv = sys.argv[2]
         parsovane_html = parsovani_html(url)
 
