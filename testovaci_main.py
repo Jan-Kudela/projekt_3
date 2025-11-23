@@ -78,6 +78,7 @@ def nazvy_obci(html):
 
     return obce_soupis
 
+##inner > div:nth-child(2) > table > tbody > tr:nth-child(24) > td:nth-child(2) > a
 
 def volici(html):
     volici_v_seznamu = html.find_all("td")[3].get_text()
@@ -155,7 +156,7 @@ def main():
     elif ".csv" not in sys.argv[2]:
             print("Název musí končit příponou .csv.")
     else:
-        vypis_knihoven()
+        #vypis_knihoven()
 
         finalni_csv = sys.argv[2]
         parsovane_html = parsovani_html(url)
@@ -186,15 +187,16 @@ def main():
                 zapis_hlavicky_csv(finalni_csv, strany_soupis)
                 print(f"Ukládám data do souboru {finalni_csv}.")
 
-            zapis_dat_csv(
-                finalni_csv, cisla_vsech_obci[x], obce[x], pocet_volicu, pocet_obalek, platne_hl, hl_stran)
+            #zapis_dat_csv(
+                #finalni_csv, cisla_vsech_obci[x], obce[x], pocet_volicu, pocet_obalek, platne_hl, hl_stran)
 
             x += 1
 
         else: print("Hotovo, ukončuji program.")
+        print(obce)
 
         #print(cisla_vsech_obci[0])
-        #print(obce)
+        print(obce)
         #print(pocet_volicu)
         #print(pocet_obalek)
         #print(platne_hl)
