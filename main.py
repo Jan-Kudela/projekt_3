@@ -5,13 +5,11 @@ author: Jan Kuděla
 email: jochanan.jorgen@gmail.com
 """
 
-import sys
-import requests
-from requests import get
-#from urllib.parse import urlparse, parse_qs, url_encode,
-from bs4 import BeautifulSoup
 import csv
 import subprocess
+import sys
+import requests
+from bs4 import BeautifulSoup
 
 
 def parsovani_html(url):
@@ -23,7 +21,6 @@ def parsovani_html(url):
         print(f"Chyba při připojení k serveru {e}.")
     else:
         parsovane_html = BeautifulSoup(odpoved.text, features="html.parser")
-
     return parsovane_html
 
 
@@ -32,14 +29,13 @@ def parsovani_cisel_obci(parsovane_html):
     hledany_odkaz = parsovane_html.find_all("table", {"class": "table"})
 
     cisla_obci = []
-    #obsahuje čísla obcí, které jsou v odkazu
+   
     for a in hledany_odkaz:
         hledany_a = a.find_all("a")
         for b in hledany_a:
             number = (b.get_text())
             if number.isdigit():
                 cisla_obci.append(number)
-
     return (cisla_obci)
 
 
@@ -49,7 +45,6 @@ def ziskani_url2(url, cisla_vsech_obci, index):
         url.replace("ps32", "ps311")
            + f"&xobec={cisla_vsech_obci[index]}&xvyber={url[-4:]}"
     )
-    
 
 
 def parsovani_html2(url_2):
@@ -61,7 +56,6 @@ def parsovani_html2(url_2):
         print(f"Chyba při připojení k serveru {e}.")
     else:
         parsovane_html_2 = BeautifulSoup(odpoved2.text, features="html.parser")
-
     return parsovane_html_2
     
 
@@ -109,7 +103,6 @@ def strany(html):
     for a in strana:
         text = a.get_text(strip=True)
         strana_soupis.append(text)
-
     return(", ".join(strana_soupis))
 
 
@@ -125,7 +118,6 @@ def hlasy_stran(html):
     for a in strana_hlasy_celkem:
         cislo = a.get_text(strip=True)
         hlasy_soupis.append(cislo)
-    
     return (", ".join(hlasy_soupis)) 
 
 
@@ -156,10 +148,8 @@ def vypis_knihoven():
 
 
 def main():
-
     url = sys.argv[1]
-    # spustíme python main.py "url adresa" "nazev souboru.csv"
-    #"https://www.volby.cz/pls/ps2017nss/ps32?xjazyk=CZ&xkraj=12&xnumnuts=7103"
+    
     if len(sys.argv) != 3:
         print("Pro spuštění chybí argument url nebo název souboru.")
         sys.exit()
@@ -177,27 +167,20 @@ def main():
 
         finalni_csv = sys.argv[2]
         parsovane_html = parsovani_html(url)
-
         cisla_vsech_obci = parsovani_cisel_obci(parsovane_html)
-        
         obce = nazvy_obci(parsovane_html)
 
         print("Stahuji data ze zadané URL.")
+
         x = 0
         while x < len(cisla_vsech_obci):
 
             url_dane_obce = ziskani_url2(url, cisla_vsech_obci,x)
-        
             parsovane_html2 = parsovani_html2(url_dane_obce)
-
             pocet_volicu = volici(parsovane_html2)
-
             pocet_obalek = obalky(parsovane_html2)
-
             platne_hl = platne_hlasy(parsovane_html2)
-
             hl_stran = hlasy_stran(parsovane_html2)
-
             strany_soupis = strany(parsovane_html2)
 
             if x == 0:
@@ -208,7 +191,6 @@ def main():
                 finalni_csv, cisla_vsech_obci[x], obce[x],
                  pocet_volicu, pocet_obalek, platne_hl, hl_stran
             )
-
             x += 1
 
         else: print("Hotovo, ukončuji program.")
