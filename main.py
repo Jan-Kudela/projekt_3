@@ -13,15 +13,18 @@ from bs4 import BeautifulSoup
 import csv
 import subprocess
 
+
 def parsovani_html(url):
-    odpoved = requests.get(url)
-    if odpoved.status_code != 200:
-        print("Chyba při načítání stránky:", odpoved.status_code)
-        sys.exit(1)
-    else:   
+    """vrací prasované html ze zadané URL adresy"""
+    try:
+        odpoved = requests.get(url)
+        odpoved.raise_for_status()
+    except requests.ConnectionError as e:
+        print(f"Chyba při připojení k serveru {e}.")
+    else:
         parsovane_html = BeautifulSoup(odpoved.text, features="html.parser")
 
-        return parsovane_html
+    return parsovane_html
 
 
 def parsovani_cisel_obci(parsovane_html):
@@ -41,30 +44,31 @@ def parsovani_cisel_obci(parsovane_html):
 
 
 def ziskani_url2(url, cisla_vsech_obci, index):
-    url_2 = url[:37] + "311"+ url[39:59] +"xobec=" + cisla_vsech_obci[index] + "&xvyber=" + url[-4:]
-    return url_2
-#url pro vybranou obec
+    """vrací URL adresu dané obce"""
+    return(
+        url.replace("ps32", "ps311")
+           + f"&xobec={cisla_vsech_obci[index]}&xvyber={url[-4:]}"
+    )
+    
 
 
 def parsovani_html2(url_2):
-    odpoved_2 = requests.get(url_2)
-    if odpoved_2.status_code != 200:
-        print("Chyba při načítání stránky:", odpoved_2.status_code)
-        sys.exit(1)
-
+    """vrací parsované html obce"""
+    try:
+        odpoved2 = requests.get(url_2)
+        odpoved2.raise_for_status()
+    except requests.ConnectionError as e:
+        print(f"Chyba při připojení k serveru {e}.")
     else:
-        parsovane_html_2 = BeautifulSoup(
-            odpoved_2.text, features="html.parser"
-            )
+        parsovane_html_2 = BeautifulSoup(odpoved2.text, features="html.parser")
 
-        return parsovane_html_2
+    return parsovane_html_2
     
 
 def nazvy_obci(html):
-
+    """vrací list s názvy obcí"""
     obce_soupis = []
     radky = html.find_all("tr")
-    print(radky)
     for r in radky:
         td = r.find_all("td")
         if not td:
@@ -80,21 +84,25 @@ def nazvy_obci(html):
 
 
 def volici(html):
+    """vrací počet voličů dané obce"""
     volici_v_seznamu = html.find_all("td")[3].get_text()
     return volici_v_seznamu
 
 
 def obalky(html):
+    """vrací počet vydaných obálek v dané obci"""
     vydane_obalky = html.find_all("td")[4].get_text()
     return vydane_obalky
 
 
 def platne_hlasy(html):
+    """vrací platné hlasy v dané obci"""
     platne_hl = html.find_all("td")[7].get_text()
     return platne_hl
 
 
 def strany(html):
+    """vrací list všech stran v dané obci"""
     strana = html.find_all("td", {"class": "overflow_name"})
 
     strana_soupis = []
@@ -106,6 +114,7 @@ def strany(html):
 
 
 def hlasy_stran(html):
+    """vrací list hlasů všech stran dané obce"""
     strana_hlasy_t1 = html.find_all(
         "td", {"class": "cislo", "headers": "t1sa2 t1sb3"})
     strana_hlasy_t2 = html.find_all(
@@ -121,18 +130,27 @@ def hlasy_stran(html):
 
 
 def zapis_hlavicky_csv(nazev_csv, strany_soupis):
+    """zápis záhlaví výsledné tabulky ve formátu csv"""
     with open(nazev_csv, mode="w", encoding="utf-8") as csv_soubor:
         zapisovac = csv.writer(csv_soubor, dialect="excel-tab")
-        zapisovac.writerow(("Číslo obce", "Obec", "Voliči", "Vydané obálky", "Platné hlasy", strany_soupis))
+        zapisovac.writerow(
+            ("Číslo obce", "Obec", "Voliči",
+              "Vydané obálky", "Platné hlasy", strany_soupis)
+        )
         
 
-def zapis_dat_csv(nazev_csv, cislo_obce, obec, volici, obalky, hlasy, hlasy_stran):
+def zapis_dat_csv(
+        nazev_csv, cislo_obce, obec, volici, obalky, hlasy, hlasy_stran):
+    """zápis dat do výsledné tabulky ve formátu csv"""
     with open(nazev_csv, mode="a", encoding="utf-8") as csv_soubor:
         zapisovac = csv.writer(csv_soubor, dialect="excel-tab")
-        zapisovac.writerow((cislo_obce, obec, volici, obalky, hlasy, hlasy_stran))
+        zapisovac.writerow(
+            (cislo_obce, obec, volici, obalky, hlasy, hlasy_stran))
 
 
 def vypis_knihoven():
+    """vytvoří soubor requirements.txt se soupisem všech nainstalovaných
+        knihoven a jejich verze"""
     with open("requirements.txt", "w", encoding = "utf-8") as r:
         subprocess.run(["pip", "freeze"], stdout =r, text=True )
 
@@ -187,19 +205,13 @@ def main():
                 print(f"Ukládám data do souboru {finalni_csv}.")
 
             zapis_dat_csv(
-                finalni_csv, cisla_vsech_obci[x], obce[x], pocet_volicu, pocet_obalek, platne_hl, hl_stran)
+                finalni_csv, cisla_vsech_obci[x], obce[x],
+                 pocet_volicu, pocet_obalek, platne_hl, hl_stran
+            )
 
             x += 1
 
         else: print("Hotovo, ukončuji program.")
-
-        #print(cisla_vsech_obci[0])
-        #print(obce)
-        #print(pocet_volicu)
-        #print(pocet_obalek)
-        #print(platne_hl)
-        #print(strany_soupis)
-        #print(hl_stran)
 
 
 if __name__ == "__main__":
