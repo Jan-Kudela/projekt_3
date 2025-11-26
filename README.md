@@ -53,9 +53,17 @@ python main.py "https://www.volby.cz/pls/ps2017nss/ps32?xjazyk=CZ&xkraj=14&xnumn
 ```
 <p>Stahuji data ze zadané URL.</p>
 <p>Ukládám data do souboru vysledky_opava.csv</p>
-<p>Ukončuji program</p>
+<p>Hotovo, ukončuji program.</p>
 ```
 
 <p>Částečný výstup:</p>
+
+```
+Číslo obce	Obec	Voliči	Vydané obálky	Platné hlasy	Občanská demokratická strana ...
+
+512974	Bělá	559	379	375	22, 0, 0, 27, 1, 9, 15, 3, 8, 5, 1, 1, 18, 0, 1, 15, 150, 0, 1, 30, 0, 3, 0, 1, 63, 1
+
+506192	Bohuslavice	1 380	908	905	48, 3, 1, 48, 0, 20, 32, 3, 6, 9, 1, 2, 82, 0, 1, 47, 349, 0, 0, 141, 0, 3, 1, 0, 106, 2
+```
 
 
