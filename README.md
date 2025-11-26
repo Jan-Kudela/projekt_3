@@ -1,6 +1,6 @@
 <h1><strong>Popis projektu</strong></h1>
 <h2>Elections Scraper</h2>
-<p> Třetí projekt v rámci kurzu Tester s Pythonem u Engeto.cz</p>
+<p> Třetí projekt v rámci kurzu Tester s Pythonem u Engeto.cz.</p>
 <p>Tento program slouží k extrahování výsledků parlamentních voleb z roku 2017 
 z webových stránek Volby.cz.  
 Odkaz pro konkrétní územní celky naleznete 
@@ -27,8 +27,8 @@ python -m venv <název_vrituálního_prostředí>
 ```
 pip install -r requirements.txt
 ```
-<h2>Spuštění programu</h2>
-<p>Program lze spustit skrze terminál nebo příkazový řádek, nutností je zadat dva argumenty. Pokud bude zadán špatný počet argumentů nebo budou zadány ve špatném pořadí, bude uživatel upozorněn.</p>
+<h2>Spuštění projektu</h2>
+<p>Program lze spustit souborem main.py skrze terminál nebo příkazový řádek, nutností je zadat dva argumenty. Pokud bude zadán špatný počet argumentů nebo budou zadány ve špatném pořadí, bude uživatel upozorněn.</p>
 
 <h2>Ukázka projektu</h2>
 Výsledky hlasování pro okres Opava:
