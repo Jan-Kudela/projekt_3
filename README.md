@@ -8,17 +8,26 @@ Odkaz pro konkrétní územní celky naleznete
 </p>
 
 <h2><strong>Instalace virtuálního prostředí</strong></h2>
-<p>Před instalací knihoven doproučuji použít nové virtuální prostředí, které naistalujete následovně:</p>
-'''<p>Windows:
-python -m venv /název_vrituálního_prostředí/
+<p>Před instalací knihoven doproučuji použít nové virtuální prostředí, které vytvoříte následovně:</p>
+<p>Windows:</p>
 
-Aktivace virtuálního prostředí:
-/název_vrituálního_prostředí/\Scripts\Activate.ps1</p>'''
+```
+python -m venv <název_vrituálního_prostředí>
+```
+<p>Aktivace virtuálního prostředí:</p>
+
+```
+<název_vrituálního_prostředí>\Scripts\Activate.ps1
+```
 <h2><strong>Instalace knihoven</strong></h2>
 
-<p>Soupis použitých knihoven třetích stran a jejich verze nalezente v souboru requirements.txt. Před jejich instalaci</p>
+<p>Soupis použitých knihoven třetích stran a jejich verze nalezente v souboru requirements.txt. </p>
+<p>Instalaci provedete příkazem:</p>
 
-pip install 
+```
+pip install <název_knihovny>
+```
+
 
 
 
