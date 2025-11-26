@@ -42,7 +42,7 @@ např.: vysledky_opava.csv
 <p>Celý příkaz pro spuštění pak může vypadat takto:</p>
 
 ```
-python main.py "https://www.volby.cz/pls/ps2017nss/ps32?xjazyk=CZ&xkraj=2&xnumnuts=2105" "vysledky_kutna_hora.csv"
+python main.py "https://www.volby.cz/pls/ps2017nss/ps32?xjazyk=CZ&xkraj=14&xnumnuts=8105" "vysledky_kutna_hora.csv"
 ```
 
 
