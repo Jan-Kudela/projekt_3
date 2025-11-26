@@ -25,27 +25,37 @@ python -m venv <název_vrituálního_prostředí>
 <p>Instalaci provedete příkazem:</p>
 
 ```
-pip install <název_knihovny>
+pip install -r requirements.txt
 ```
 <h2>Spuštění programu</h2>
-<p>Program lze spustit skrze terminál nebo příkazový řádek, nutností je zadat dva systémové argumenty:</p>
-<p>1. argument: URL adresa vybraného územního celku</p>
+<p>Program lze spustit skrze terminál nebo příkazový řádek, nutností je zadat dva argumenty. Pokud bude zadán špatný počet argumentů nebo budou zadány ve špatném pořadí, bude uživatel upozorněn.</p>
+
+<h2>Ukázka projektu</h2>
+Výsledky hlasování pro okres Opava:
+
+<p>1. argument: URL adresa vybraného okresu:</p>
 
 ```
-např.: https://www.volby.cz/pls/ps2017nss/ps32?xjazyk=CZ&xkraj=14&xnumnuts=8105
+https://www.volby.cz/pls/ps2017nss/ps32?xjazyk=CZ&xkraj=14&xnumnuts=8105
 ```
-<p>2. argument: název souboru, do kterého se výsledky uloží. Soubor musí být ve formátu CSV a název souboru musí tuto příponu také obsahovat.</p>
+<p>2. argument: název souboru, do kterého se výsledky uloží. Soubor musí být ve formátu CSV a název souboru musí tuto příponu také obsahovat:</p>
 
 ```
-např.: vysledky_opava.csv
+vysledky_opava.csv
 ```
-<p>Celý příkaz pro spuštění pak může vypadat takto:</p>
+<p>Celý příkaz pro spuštění:</p>
 
 ```
-python main.py "https://www.volby.cz/pls/ps2017nss/ps32?xjazyk=CZ&xkraj=14&xnumnuts=8105" "vysledky_kutna_hora.csv"
+python main.py "https://www.volby.cz/pls/ps2017nss/ps32?xjazyk=CZ&xkraj=14&xnumnuts=8105" "vysledky_opava.csv"
+```
+<p>Průběh programu:</p>
+
+```
+<p>Stahuji data ze zadané URL.</p>
+<p>Ukládám data do souboru vysledky_opava.csv</p>
+<p>Ukončuji program</p>
 ```
 
-
-
+<p>Částečný výstup:</p>
 
 
