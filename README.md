@@ -65,5 +65,7 @@ python main.py "https://www.volby.cz/pls/ps2017nss/ps32?xjazyk=CZ&xkraj=14&xnumn
 
 506192	Bohuslavice	1 380	908	905	48, 3, 1, 48, 0, 20, 32, 3, 6, 9, 1, 2, 82, 0, 1, 47, 349, 0, 0, 141, 0, 3, 1, 0, 106, 2
 ```
+<h2>Náhled výstupního souboru</h2>
 
+[zobrazit dataset](vysledky_opava.csv)
 
