@@ -32,12 +32,12 @@ pip install <název_knihovny>
 <p>1. argument: URL adresa vybraného územního celku</p>
 
 ```
-např.: https://www.volby.cz/pls/ps2017nss/ps32?xjazyk=CZ&xkraj=2&xnumnuts=2105
+např.: https://www.volby.cz/pls/ps2017nss/ps32?xjazyk=CZ&xkraj=14&xnumnuts=8105
 ```
 <p>2. argument: název souboru, do kterého se výsledky uloží. Soubor musí být ve formátu CSV a název souboru musí tuto příponu také obsahovat.</p>
 
 ```
-např.: vysledky_kutna_hora.csv
+např.: vysledky_opava.csv
 ```
 <p>Celý příkaz pro spuštění pak může vypadat takto:</p>
 
