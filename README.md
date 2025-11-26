@@ -51,9 +51,9 @@ python main.py "https://www.volby.cz/pls/ps2017nss/ps32?xjazyk=CZ&xkraj=14&xnumn
 <p>Průběh programu:</p>
 
 ```
-<p>Stahuji data ze zadané URL.</p>
-<p>Ukládám data do souboru vysledky_opava.csv</p>
-<p>Hotovo, ukončuji program.</p>
+Stahuji data ze zadané URL.
+Ukládám data do souboru vysledky_opava.csv
+Hotovo, ukončuji program.
 ```
 
 <p>Částečný výstup:</p>
